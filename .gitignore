@@ -1,0 +1,8 @@
+# database file - reproducible from init.sql
+database/analytics.db
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
