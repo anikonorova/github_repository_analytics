@@ -6,3 +6,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.egg-info/
+
+# environment variables - never commit secrets
+.env
