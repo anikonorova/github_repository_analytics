@@ -6,7 +6,7 @@ def fetch_issues() -> list:
     client = GitHubClient()
     print("Fetching issues...")
 
-    issues = client.get_paginated(
+    raw = client.get_paginated(
         "issues",
         params={
             "state": "all",
@@ -15,7 +15,7 @@ def fetch_issues() -> list:
     )
 
     # Exclude pull requests — they appear in the /issues response too
-    #issues = [item for item in raw if "pull_request" not in item]
+    issues = [item for item in raw if "pull_request" not in item]
 
-    print(f"Fetched {len(issues)} issues")
+    print(f"Fetched {len(issues)} issues (filtered {len(raw) - len(issues)} PRs)")
     return issues
