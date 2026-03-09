@@ -26,7 +26,7 @@ if __name__ == "__main__":
     prs     = fetch_pull_requests()
     issues  = fetch_issues()
     commits = fetch_commits()
-    # Reviews require PR numbers, so we pass the already-fetched PR list
+    # Reviews require PR numbers, so pass the already-fetched PR list
     reviews = fetch_reviews(prs)
 
     print("\n--- Loading ---")

@@ -23,7 +23,7 @@ class GitHubClient:
 
         if not response.ok:
             print(f"Error {response.status_code}: {response.url}")
-            print(f"   {response.json().get('message', 'Unknown error')}")
+            print(f"{response.json().get('message', 'Unknown error')}")
             response.raise_for_status()
 
         return response.json()
