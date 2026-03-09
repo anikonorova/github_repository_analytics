@@ -40,3 +40,24 @@ def fetch_pull_requests() -> list:
 
     print(f"Fetched {len(all_prs)} pull requests")
     return all_prs
+
+detail_fields = [
+    "additions", "deletions", "changed_files",
+    "mergeable", "mergeable_state", "auto_merge",
+    "commits", "comments", "review_comments",
+]
+
+
+def fetch_pull_requests_with_stats(pull_requests: list) -> list:
+    client = GitHubClient()
+    print(f"Fetching stats for {len(pull_requests)} PRs...")
+
+    for i, pr in enumerate(pull_requests):
+        detail = client.get(f"pulls/{pr['number']}")
+        pr.update({k: detail[k] for k in detail_fields if k in detail})
+
+        if (i + 1) % 50 == 0:
+            print(f"Processed {i + 1}/{len(pull_requests)} PRs")
+
+    print(f"Enriched {len(pull_requests)} PRs")
+    return pull_requests

@@ -10,7 +10,7 @@ Execution order:
 from dotenv import load_dotenv
 
 from database.init_db import init_database
-from extraction.extractors.pull_requests import fetch_pull_requests
+from extraction.extractors.pull_requests import fetch_pull_requests, fetch_pull_requests_with_stats
 from extraction.extractors.issues import fetch_issues
 from extraction.extractors.commits import fetch_commits
 from extraction.extractors.reviews import fetch_reviews
@@ -24,6 +24,7 @@ if __name__ == "__main__":
 
     print("\n--- Extracting ---")
     prs     = fetch_pull_requests()
+    prs     = fetch_pull_requests_with_stats(prs)   # additional stat data 
     issues  = fetch_issues()
     commits = fetch_commits()
     # Reviews require PR numbers, so pass the already-fetched PR list
