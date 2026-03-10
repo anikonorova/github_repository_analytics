@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw_data
+    schema: raw_data
+    tables:
+      - name: pull_requests
+      - name: reviews
+      - name: commits
+      - name: issues
