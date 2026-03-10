@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS raw_data.pull_requests (
 
 CREATE TABLE IF NOT EXISTS raw_data.reviews (
     id            VARCHAR,
-    pr_id         VARCHAR,
+    pr_number     VARCHAR,
     payload       JSON,
     _extracted_at TIMESTAMPTZ
 );

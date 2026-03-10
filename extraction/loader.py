@@ -66,7 +66,7 @@ def load_reviews(reviews: list):
 
     for review in reviews:
         conn.execute("""
-            INSERT INTO raw_data.reviews (id, pr_id, payload, _extracted_at)
+            INSERT INTO raw_data.reviews (id, pr_number, payload, _extracted_at)
             VALUES (?, ?, ?, ?)
         """, [str(review["id"]), str(review["pr_number"]), json.dumps(review), extracted_at])
 

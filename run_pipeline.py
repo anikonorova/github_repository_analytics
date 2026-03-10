@@ -22,18 +22,21 @@ if __name__ == "__main__":
     print("--- Initialising database ---")
     init_database()
 
-    print("\n--- Extracting ---")
-    prs     = fetch_pull_requests()
-    prs     = fetch_pull_requests_with_stats(prs)   # additional stat data 
-    issues  = fetch_issues()
-    commits = fetch_commits()
-    # Reviews require PR numbers, so pass the already-fetched PR list
-    reviews = fetch_reviews(prs)
-
-    print("\n--- Loading ---")
+    print("\n--- Pull Requests ---")
+    prs = fetch_pull_requests()
+    prs = fetch_pull_requests_with_stats(prs)
     load_pull_requests(prs)
+
+    print("\n--- Issues ---")
+    issues = fetch_issues()
     load_issues(issues)
+
+    print("\n--- Commits ---")
+    commits = fetch_commits()
     load_commits(commits)
+
+    print("\n--- Reviews ---")
+    reviews = fetch_reviews(prs)
     load_reviews(reviews)
 
     print("\nPipeline complete")
