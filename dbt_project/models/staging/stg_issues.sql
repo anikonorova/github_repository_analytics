@@ -18,11 +18,13 @@ base as (
         payload->'user'->>'login'                           as author_login,
         (payload->'user'->>'id')::bigint                    as author_id,
         payload->'user'->>'type'                            as author_type,
+        payload->'user'->>'email'                           as author_email,
         payload->>'author_association'                      as author_association,
 
         payload->'assignee'->>'login'                       as assignee_login,
         (payload->'assignee'->>'id')::bigint                as assignee_id,
         payload->'assignee'->>'type'                        as assignee_type,
+        payload->'assignee'->>'email'                       as assignee_email,
 
         (payload->>'comments')::integer                     as comment_count,
 
@@ -53,8 +55,10 @@ labels as (
 ),
 
 final as (
-    select 
-        b.* exclude(labels), 
+    select
+        b.* exclude(labels),
+        {{ contributor_key('b.author_id', 'b.author_login', 'b.author_email') }}       as author_contributor_key,
+        {{ contributor_key('b.assignee_id', 'b.assignee_login', 'b.assignee_email') }} as assignee_contributor_key,
         coalesce(l.label_names, []) as label_names
     from base b
     left join labels l on b.issue_id = l.issue_id

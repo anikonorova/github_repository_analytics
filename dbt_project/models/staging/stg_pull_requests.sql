@@ -22,6 +22,7 @@ base as (
         (payload->'user'->>'id')::bigint        as author_id,
         payload->'user'->>'login'               as author_login,
         payload->'user'->>'type'                as author_type,   -- user or bot
+        payload->'user'->>'email'               as author_email,
         payload->>'author_association'          as author_association,
 
         payload->'head'->>'ref'                 as source_branch,
@@ -52,8 +53,9 @@ labels as (
 ),
 
 final as (
-    select 
-        b.* exclude(labels), 
+    select
+        b.* exclude(labels),
+        {{ contributor_key('b.author_id', 'b.author_login', 'b.author_email') }} as author_contributor_key,
         coalesce(l.label_names, []) as label_names
     from base b
     left join labels l on b.pr_id = l.pr_id

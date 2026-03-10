@@ -15,16 +15,24 @@ base as (
         payload->'author'->>'login'                             as author_login,
         (payload->'author'->>'id')::bigint                      as author_id,
         payload->'author'->>'type'                              as author_type,
+        payload->'commit'->'author'->>'email'                   as author_email,
 
         payload->'committer'->>'login'                          as committer_login,
-        payload->'committer'->>'id'                             as committer_id,
+        (payload->'committer'->>'id')::bigint                   as committer_id,
         payload->'committer'->>'type'                           as committer_type,
+        payload->'commit'->'committer'->>'email'                as committer_email,
 
         _extracted_at
-    
+
     from source
+),
+
+final as (
+    select
+        *,
+        {{ contributor_key('author_id', 'author_login', 'author_email') }}          as author_contributor_key,
+        {{ contributor_key('committer_id', 'committer_login', 'committer_email') }} as committer_contributor_key
+    from base
 )
 
--- add deduplication 
-
-select * from base
+select * from final
