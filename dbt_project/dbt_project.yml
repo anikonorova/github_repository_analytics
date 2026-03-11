@@ -29,3 +29,7 @@ models:
       kpi:
         +schema: kpi
         +materialized: table
+
+# global variables
+vars:
+  kpi_start_date: '2025-01-01'

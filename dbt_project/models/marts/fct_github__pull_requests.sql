@@ -12,33 +12,26 @@ reviews as (
     select 
         pr_number,
         {{ to_amsterdam('submitted_at') }} as submitted_at,
-        reviewer_type,
-        reviewer_contributor_key
+        reviewer_type
     from {{ ref('stg_reviews') }}
 ),
 
 review_flags as (
     select
-        r.pr_number,
+        pr_number,
         min(case 
-                when r.reviewer_type = 'User' then r.submitted_at
+                when reviewer_type = 'User' then submitted_at
                 else null
             end
         ) as first_user_review_at,
         min(case 
-                when r.reviewer_type = 'Bot' then r.submitted_at
+                when reviewer_type = 'Bot' then submitted_at
                 else null
             end
         ) as first_bot_review_at,
-        sum(case 
-                when r.reviewer_contributor_key = pr.author_contributor_key then 1
-                else 0
-            end
-        ) as self_review_count,
         count(*) as total_review_count
-    from reviews r
-        join pull_requests pr on r.pr_number = pr.pr_number
-    group by r.pr_number
+    from reviews
+    group by pr_number
 ),
 
 joined as (
@@ -72,14 +65,17 @@ joined as (
         -- review data
         rf.first_user_review_at,
         rf.first_bot_review_at,
-        rf.self_review_count,
         rf.total_review_count,
 
-        -- cycle time in hours (open → merge)
+        -- cycle time
         case
             when pr.is_merged
             then date_diff('hour', pr.created_at, pr.merged_at)
         end as cycle_time_hours,
+        case
+            when pr.is_merged
+            then date_diff('day', pr.created_at, pr.merged_at)
+        end as cycle_time_days,
 
         -- review turnaround in hours (open → first review)
         case
@@ -92,6 +88,16 @@ joined as (
     from pull_requests pr
     left join review_flags rf
         on pr.pr_number = rf.pr_number
+),
+
+final as (
+    select *,
+    case
+            when total_changes <= 50     then 'small'
+            when total_changes <= 250    then 'medium'
+            else                              'large'
+        end as pr_size
+    from joined
 )
 
-select * from joined
+select * from final

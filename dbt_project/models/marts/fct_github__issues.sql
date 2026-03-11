@@ -37,19 +37,26 @@ enriched as (
         end as days_to_close,
 
         (closed_at is not null) as is_resolved,
+        (closed_at is null) as is_open,
         (issue_state = 'closed' and state_reason = 'completed') as is_completed,
 
+        _extracted_at
+
+    from issues
+),
+
+final as (
+    select *,
         -- resolution time buckets
         case
-            when closed_at is null                                 then 'open'
-            when datediff('day', created_at, closed_at) <= 7       then 'within_7_days'
-            when datediff('day', created_at, closed_at) <= 14      then 'within_14_days'
-            when datediff('day', created_at, closed_at) <= 30      then 'within_30_days'
-            else                                                        'over_30_days'
-        end as resolution_bucket,
-
-        _extracted_at
-    from issues
+            when closed_at is null       then 'open'
+            when hours_to_close <= 24    then 'within_24h'
+            when days_to_close <= 7      then 'within_7_days'
+            when days_to_close <= 14     then 'within_14_days'
+            when days_to_close <= 30     then 'within_30_days'
+            else                         'over_30_days'
+        end as resolution_bucket
+    from enriched
 )
 
-select * from enriched
+select * from final
