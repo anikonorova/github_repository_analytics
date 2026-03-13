@@ -3,6 +3,11 @@ version: 2
 sources:
   - name: raw_data
     schema: raw_data
+    config:
+      freshness:
+        warn_after: {count: 30, period: day}
+      loaded_at_field: _extracted_at
+
     tables:
       - name: pull_requests
       - name: reviews

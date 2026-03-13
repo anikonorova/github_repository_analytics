@@ -1,0 +1,39 @@
+models:
+  - name: stg_pull_requests
+    description: One row per pull request extracted from the GitHub API. JSON fields are flattened, timestamps normalized to UTC, and core attributes like author, state, and lifecycle timestamps are cast to typed columns.
+    columns:
+      - name: pr_id
+        tests:
+          - not_null
+          - unique
+      - name: pr_state
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - open
+                  - closed
+    
+  - name: stg_reviews
+    description: One row per pull request review event. Extracts reviewer identity, review state, associated PR id, and submission timestamp.
+    columns:
+      - name: review_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_issues
+    description: One row per GitHub issue. Extracts identifiers, author, labels, and lifecycle timestamps (created_at, closed_at) from the raw API payload.
+    columns:
+      - name: issue_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_commits
+    description: One row per commit. Parses commit SHA, author identity, and commit timestamp from the GitHub commit payload.
+    columns:
+      - name: commit_sha
+        tests:
+          - not_null
+          - unique

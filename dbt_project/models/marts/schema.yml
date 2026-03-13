@@ -1,0 +1,115 @@
+version: 2
+
+models:
+  - name: dim_github__contributors
+    description: |
+      Dimension table describing repository contributors. Built from the
+      contributor spine and assigns a stable contributor_key derived from
+      GitHub identity fields.
+    columns:
+      - name: contributor_key
+        description: Surrogate key uniquely identifying a contributor across all GitHub events.
+        tests:
+          - not_null
+          - unique
+      - name: github_id
+        description: GitHub user id when available.
+      - name: login
+        description: GitHub username associated with the contributor.
+      - name: email
+        description: Commit email used as fallback identity when GitHub user id is not available.
+
+  - name: fct_github__pull_requests
+    description: |
+      Fact table at grain one row per pull request. Contains lifecycle timestamps,
+      author information, and derived workflow metrics used to analyze development
+      flow and collaboration patterns.
+    columns:
+      - name: pr_id
+        description: Unique identifier of the pull request.
+        tests:
+          - not_null
+          - unique
+      - name: author_contributor_key
+        description: Contributor key representing the pull request author.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_github__contributors')
+                field: contributor_key
+      - name: created_at
+        description: Timestamp when the pull request was opened.
+        tests:
+          - not_null
+      - name: merged_at
+        description: Timestamp when the pull request was merged.
+      - name: closed_at
+        description: Timestamp when the pull request was closed.
+      - name: cycle_time_hours
+        description: Time between pull request creation and merge in hours.
+
+  - name: fct_github__issues
+    description: |
+      Fact table at grain one row per issue. Stores issue lifecycle timestamps
+      and derived metrics used to measure resolution speed and bug handling.
+    columns:
+      - name: issue_id
+        description: Unique identifier of the issue.
+        tests:
+          - not_null
+          - unique
+      - name: author_contributor_key
+        description: Contributor key representing the issue author.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_github__contributors')
+                field: contributor_key
+      - name: created_at
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null
+      - name: closed_at
+        description: Timestamp when the issue was closed.
+      - name: resolution_time_hours
+        description: Time between issue creation and closure in hours.
+
+  - name: kpi_cycle_time
+    description: |
+      Aggregated KPI model calculating the median pull request cycle time
+      (time from PR creation to merge) by month.
+    columns:
+      - name: creation_month
+        description: Calendar month of pull request creation.
+      - name: median_cycle_time_hours
+        description: Median pull request cycle time measured in hours.
+
+  - name: kpi_time_to_first_review
+    description: |
+      KPI measuring the median time between pull request creation and
+      the first submitted review.
+    columns:
+      - name: creation_month
+        description: Calendar month of pull request creation.
+      - name: median_time_to_first_review_hours
+        description: Median time between PR creation and first review.
+
+  - name: kpi_bug_resolution_time
+    description: |
+      KPI measuring median resolution time for issues labeled as bugs,
+      calculated as the duration between issue creation and closure.
+    columns:
+      - name: creation_quarter
+        description: Calendar quarter used for aggregation.
+      - name: median_resolution_time_hours
+        description: Median bug resolution time in hours.
+
+  - name: kpi_bug_resolution_buckets
+    description: |
+      Distribution of bug resolution durations grouped into predefined
+      time buckets to highlight long-tail resolution patterns.
+    columns:
+      - name: resolution_bucket
+        description: Bucket representing issue resolution duration.
+      - name: issue_count
+        description: Number of issues resolved within the bucket.
