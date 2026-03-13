@@ -1,7 +1,6 @@
 from extraction.github_client import GitHubClient
 from extraction.config import SINCE_DATE
 
-
 def fetch_pull_requests() -> list:
     client = GitHubClient()
     print("Fetching pull requests...")
@@ -22,10 +21,9 @@ def fetch_pull_requests() -> list:
         if not data:
             break
 
-        # Stop once we reach PRs older than the cutoff
+        # if SINCE_DATE reached then stop loading data
         last_updated = data[-1].get("updated_at", "")
         if last_updated and last_updated < SINCE_DATE:
-            # Include items on this page that are still within range
             data = [pr for pr in data if pr.get("updated_at", "") >= SINCE_DATE]
             all_prs.extend(data)
             break
@@ -46,7 +44,6 @@ detail_fields = [
     "mergeable", "mergeable_state", "auto_merge",
     "commits", "comments", "review_comments",
 ]
-
 
 def fetch_pull_requests_with_stats(pull_requests: list) -> list:
     client = GitHubClient()

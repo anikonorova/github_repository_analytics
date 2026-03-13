@@ -1,4 +1,4 @@
-# database file - reproducible from init.sql
+# database file
 database/analytics.db
 
 # python
@@ -7,8 +7,11 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 
-# environment variables - never commit secrets
+# environment variables
 .env
 
 # dbt logs
 logs/
+
+# editor related configs
+.vscode/

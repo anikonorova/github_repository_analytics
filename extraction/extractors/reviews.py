@@ -1,6 +1,5 @@
 from extraction.github_client import GitHubClient
 
-
 def fetch_reviews(pull_requests: list) -> list:
     client = GitHubClient()
     print(f"Fetching reviews for {len(pull_requests)} PRs...")

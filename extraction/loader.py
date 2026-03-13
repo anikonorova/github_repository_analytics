@@ -2,18 +2,16 @@ import duckdb
 import json
 from datetime import datetime, timezone
 
-DB_PATH = "/Users/aanikonorova/projects/github_repository_analytics/database/analytics.db"
-
+DB_PATH = "../database/analytics.db"
 
 def get_connection():
     return duckdb.connect(DB_PATH)
-
 
 def load_pull_requests(pull_requests: list):
     conn = get_connection()
     extracted_at = datetime.now(timezone.utc)
 
-    # Full refresh — delete before insert
+    # Full refresh: delete existing rows before insert.
     conn.execute("DELETE FROM raw_data.pull_requests")
 
     for pr in pull_requests:
@@ -24,7 +22,6 @@ def load_pull_requests(pull_requests: list):
 
     print(f"Loaded {len(pull_requests)} pull requests")
     conn.close()
-
 
 def load_issues(issues: list):
     conn = get_connection()
@@ -41,7 +38,6 @@ def load_issues(issues: list):
     print(f"Loaded {len(issues)} issues")
     conn.close()
 
-
 def load_commits(commits: list):
     conn = get_connection()
     extracted_at = datetime.now(timezone.utc)
@@ -56,7 +52,6 @@ def load_commits(commits: list):
 
     print(f"Loaded {len(commits)} commits")
     conn.close()
-
 
 def load_reviews(reviews: list):
     conn = get_connection()

@@ -1,3 +1,9 @@
 requests
 python-dotenv
 duckdb
+dbt-core
+dbt-duckdb
+pandas
+matplotlib
+seaborn
+notebook

@@ -1,9 +1,6 @@
-"""
-Creates the DuckDB database and initialises the raw_data schema + tables by executing init.sql.
-"""
+"""Initialize the DuckDB database and create the raw tables from `init.sql`."""
 
 import duckdb
-
 
 def init_database():
     conn = duckdb.connect("database/analytics.db")
@@ -14,7 +11,7 @@ def init_database():
     conn.execute(sql)
     print("Database initialised")
 
-    # Verify tables were created
+    # Check to see if tables were created
     conn.sql("""
         SELECT table_schema, table_name
         FROM information_schema.tables

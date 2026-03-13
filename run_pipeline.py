@@ -1,11 +1,4 @@
-"""
-Single entry point for the extraction + load phase of the pipeline.
-
-Execution order:
-  1. Initialise the database (creates schemas and tables if they don't exist)
-  2. Extract all entities from the GitHub API
-  3. Load raw JSON payloads into DuckDB
-"""
+"""Run the extraction step and load raw GitHub data into DuckDB."""
 
 from dotenv import load_dotenv
 
@@ -18,7 +11,7 @@ from extraction.loader import load_pull_requests, load_issues, load_commits, loa
 
 load_dotenv()
 
-if __name__ == "__main__":
+def main():
     print("--- Initialising database ---")
     init_database()
 
@@ -40,3 +33,6 @@ if __name__ == "__main__":
     load_reviews(reviews)
 
     print("\nPipeline complete")
+
+if __name__ == "__main__":
+    main()
