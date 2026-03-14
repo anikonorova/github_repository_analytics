@@ -4,7 +4,7 @@ Take-home assessment for the Senior Analytics Engineer role.
 
 End-to-end pipeline that extracts GitHub activity from `pandas-dev/pandas`, transforms it with dbt, and surfaces three engineering KPIs. The pipeline is repo-agnostic — swap `REPO_OWNER` and `REPO_NAME` in `extraction/config.py` to point it at any public GitHub repo.
 
-**[Full project summary, KPI results, and design decisions → `analysis/summary_presentation.ipynb`](analysis/summary_presentation.ipynb)**
+**[Full project summary, KPI results, and design decisions → `analysis/summary_presentation.ipynb`](https://github.com/anikonorova/github_repository_analytics/blob/main/analysis/summary.ipynb)**
 
 ---
 
@@ -88,4 +88,4 @@ Staging models are views. Mart and KPI models are materialized as tables.
 | **Time to First Review** | Median hours from PR opened → first human review | month |
 | **Bug Resolution Time** | Median hours from bug issue opened → closed | quarter |
 
-For full KPI definitions, exclusion rules, threshold choices, and results see the [summary notebook](analysis/summary_presentation.ipynb).
+For full KPI definitions, exclusion rules, threshold choices, and results see the [summary notebook](https://github.com/anikonorova/github_repository_analytics/blob/main/analysis/summary.ipynb).
