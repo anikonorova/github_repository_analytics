@@ -2,7 +2,7 @@ import duckdb
 import json
 from datetime import datetime, timezone
 
-DB_PATH = "../database/analytics.db"
+DB_PATH = "./database/analytics.db"
 
 def get_connection():
     return duckdb.connect(DB_PATH)

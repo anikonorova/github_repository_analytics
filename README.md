@@ -2,9 +2,9 @@
 
 Take-home assessment for the Senior Analytics Engineer role.
 
-End-to-end pipeline that extracts GitHub activity from `pandas-dev/pandas`, transforms it with dbt, and surfaces three engineering KPIs. The pipeline is repo-agnostic — swap `REPO_OWNER` and `REPO_NAME` in `extraction/config.py` to point it at any public GitHub repo.
+End-to-end pipeline that extracts GitHub activity from `pandas-dev/pandas`, transforms it with dbt, and surfaces three engineering KPIs. The pipeline is repo-agnostic - swap `REPO_OWNER` and `REPO_NAME` in `extraction/config.py` to point it at any public GitHub repo.
 
-**[Full project summary, KPI results, and design decisions → `analysis/summary_presentation.ipynb`](https://github.com/anikonorova/github_repository_analytics/blob/main/analysis/summary.ipynb)**
+**[Full project summary, KPI results, and design decisions → `analysis/summary.ipynb`](https://github.com/anikonorova/github_repository_analytics/blob/main/analysis/summary.ipynb)**
 
 ---
 
@@ -23,16 +23,29 @@ End-to-end pipeline that extracts GitHub activity from `pandas-dev/pandas`, tran
 
 **1. Install dependencies**
 ```bash
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
 **2. Set up environment**
 ```bash
 cp .env.example .env
-# add your GITHUB_TOKEN
+# add your GITHUB_TOKEN https://github.com/settings/tokens
 ```
 
-**3. Configure dbt** — create `~/.dbt/profiles.yml`:
+**3. Initialise the database**
+```bash
+python database/init_db.py
+```
+Creates `database/analytics.db` and the `raw_data` schema with tables.
+
+**4. Configure dbt** - run `dbt init` to create `~/.dbt/profiles.yml`:
+```bash
+cd dbt_project
+dbt init          # creates ~/.dbt/profiles.yml interactively
+```
+Use the following as a reference for the interactive prompts:
 ```yaml
 dbt_project:
   outputs:
@@ -44,7 +57,13 @@ dbt_project:
   target: dev
 ```
 
-**4. Run the pipeline**
+**5. (Optional) Adjust extraction window**
+
+> Edit `extraction/config.py` to change the target repo or data extraction window.  
+> The default value is `SINCE_DATE = "2025-01-01T00:00:00Z"`; full extraction takes over an hour.   
+> Set it to a more recent date (e.g. a few days ago) for a quick test run.  
+
+**6. Run the pipeline**
 ```bash
 python run_pipeline.py   # extract & load raw data into DuckDB
 
@@ -52,7 +71,7 @@ cd dbt_project
 dbt run                  # build all models
 ```
 
-**5. Open the notebook**
+**7. Open the notebook**
 ```bash
 jupyter notebook analysis/summary_presentation.ipynb
 ```

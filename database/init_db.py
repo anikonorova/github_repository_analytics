@@ -3,7 +3,7 @@
 import duckdb
 
 def init_database():
-    conn = duckdb.connect("database/analytics.db")
+    conn = duckdb.connect("./database/analytics.db")
 
     with open("database/init.sql", "r") as f:
         sql = f.read()
