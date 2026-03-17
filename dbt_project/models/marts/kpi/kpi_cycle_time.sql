@@ -1,7 +1,7 @@
 -- KPI: PR Cycle Time
 -- Definition: duration in hours from PR opened to merged
 -- Excludes: draft PRs, bot authors, negative/zero cycle times
--- Grain: one row per calendar month (Europe/Amsterdam)
+-- Grain: one row per calendar month (Europe/Amsterdam timezone)
 
 with base as (
     select
@@ -23,8 +23,7 @@ aggregated as (
         pr_size,
         count(*) as merged_pr_count,
 
-        -- exclude large PRs: insufficient monthly sample size (<20/month)
-        -- for statistical reliability of median calculation
+        -- exclude large PRs: not enough data per month (<20) for a reliable median
         (case 
             when pr_size != 'large' then median(cycle_time_hours)
             else null  

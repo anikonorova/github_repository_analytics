@@ -1,9 +1,7 @@
 -- KPI: Bug Issue Resolution by Time Bucket
--- Definition: count of bug issues per resolution time bucket per month
+-- Definition: count of bug issues per resolution time bucket per week
 -- Excludes: bot authors (filtered upstream in fct)
--- Grain: one row per calendar month (Europe/Amsterdam)
--- Note: buckets are mutually exclusive and exhaustive
---       (resolved_within_24h + _7d + _14d + _30d + over_30d + still_open = total_bug_count)
+-- Grain: one row per week (Europe/Amsterdam timezone)
 
 with base as (
     select

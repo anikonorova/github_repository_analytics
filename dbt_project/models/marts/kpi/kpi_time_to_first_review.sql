@@ -1,7 +1,7 @@
 -- KPI: Time to First Review
 -- Definition: hours from PR opened to first human review
 -- Excludes: draft PRs, bot authors (filtered upstream in fct)
--- Grain: one row per calendar week (Europe/Amsterdam)
+-- Grain: one row per calendar month (Europe/Amsterdam timezone)
 
 with base as (
     select

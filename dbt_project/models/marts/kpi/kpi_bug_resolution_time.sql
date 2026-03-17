@@ -2,7 +2,7 @@
 -- Definition: hours from issue opened to closed, for bug-labelled issues only
 -- Excludes: bot authors (filtered upstream in fct) and closed issues with reason other than 'completed'
 -- to avoid counting closed as duplicates issues and others
--- Grain: one row per calendar month (Europe/Amsterdam)
+-- Grain: one row per quarter (Europe/Amsterdam timezone)
 
 with base as (
     select

@@ -45,7 +45,10 @@ Creates `database/analytics.db` and the `raw_data` schema with tables.
 cd dbt_project
 dbt init          # creates ~/.dbt/profiles.yml interactively
 ```
-Use the following as a reference for the interactive prompts:
+
+
+Open the file `~/.dbt/profiles.yml`. 
+Copy and paste the configuration below into this file, and update the path to match the absolute path to your newly created `database/analytics.db`.
 ```yaml
 dbt_project:
   outputs:
